@@ -1,0 +1,7 @@
+.user.ini
+.htaccess
+.well-known/
+.venv/
+
+common/
+lab/*/
