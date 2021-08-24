@@ -2029,7 +2029,7 @@ jsPsych.randomization = (function () {
         return shuffle(arr);
     }
 
-    module.shuffleNoRepeats = function (arr, equalityTest) {
+    module.shuffleNoRepeats = function(arr, equalityTest) { 
         if (!Array.isArray(arr)) {
             console.error('First argument to jsPsych.randomization.shuffleNoRepeats() must be an array.')
         }
@@ -2039,33 +2039,52 @@ jsPsych.randomization = (function () {
         // define a default equalityTest
         if (typeof equalityTest == 'undefined') {
             equalityTest = function (a, b) {
-                if (a === b) {
+                if (JSON.stringify(a) === JSON.stringify(b)) {
                     return true;
                 } else {
                     return false;
                 }
             }
         }
-
-        var random_shuffle = shuffle(arr);
-        for (var i = 0; i < random_shuffle.length - 1; i++) {
-            if (equalityTest(random_shuffle[i], random_shuffle[i + 1])) {
-                // neighbors are equal, pick a new random neighbor to swap (not the first or last element, to avoid edge cases)
-                var random_pick = Math.floor(Math.random() * (random_shuffle.length - 2)) + 1;
-                // test to make sure the new neighbor isn't equal to the old one
-                while (
-                    equalityTest(random_shuffle[i + 1], random_shuffle[random_pick]) ||
-                    (equalityTest(random_shuffle[i + 1], random_shuffle[random_pick + 1]) || equalityTest(random_shuffle[i + 1], random_shuffle[random_pick - 1]))
-                ) {
-                    random_pick = Math.floor(Math.random() * (random_shuffle.length - 2)) + 1;
+        // Conversion type
+        let list = {};
+        arr.forEach((v,i) => {
+            list[JSON.stringify(v)] = list[JSON.stringify(v)] ? list[JSON.stringify(v)] + 1 : 1;
+        });
+        // Start arranging combined data
+        let random_shuffle =  (function c(arr, re){
+            let max = 0, // Maximum number of repetitions in the array
+                sum = 0, // Remove the maximum quantity and the remaining quantity
+                sarr = Object.keys(arr);
+            if(sarr.length < 1) { 
+                return re;
+            } // if length of the keys in arr less than 1, means 0, then return. because there is no thing left
+            for(let i in arr) { 
+                if(!arr[max] || arr[i] > arr[max]) {
+                    max = i;
                 }
-                var new_neighbor = random_shuffle[random_pick];
-                random_shuffle[random_pick] = random_shuffle[i + 1];
-                random_shuffle[i + 1] = new_neighbor;
+                sum += arr[i];
+            } // result {1:2, 3:3} original [1,1,3,3,3]
+            sum -= arr[max];
+            let rand_index = (arr[max] - sum >= 1) ? max : sarr[Math.floor(Math.random() * sarr.length)]; // get the value in arr
+            if(re.length && equalityTest(JSON.parse(rand_index), JSON.parse(re[re.length - 1]))) { // re is the result, make a judgement
+                let tmp = sarr.splice(sarr.indexOf(rand_index), 1)[0]; // 
+                rand_index = (sarr.length > 0) ? sarr[Math.floor(Math.random() * sarr.length)] : tmp; //
             }
-        }
-
-        return random_shuffle;
+            re.push(rand_index);
+            arr[rand_index] -= 1;
+            if(arr[rand_index] < 1) { 
+                delete arr[rand_index];
+            }
+            return c(arr, re);
+        })(list, []);
+        // End
+        // Conversion type
+        let out = [];
+        random_shuffle.forEach(v => {
+            out.push(JSON.parse(v));
+        });
+        return out;
     }
 
     module.shuffleAlternateGroups = function (arr_groups, random_group_order) {
