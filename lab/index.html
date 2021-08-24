@@ -228,7 +228,7 @@
             stimulus: "<p style = 'color : white'>你的性别</p>",
             choices: ['男', '女', '其他'],
             on_finish: function (data) {
-                info["Sex"] = data.button_pressed == 0 ? "Male" : (data.button_pressed == 1 ? "Female" : "Other")
+                info["Sex"] = data.response == 0 ? "Male" : (data.response == 1 ? "Female" : "Other")
             }
         }, {
             type: 'survey-html-form',
