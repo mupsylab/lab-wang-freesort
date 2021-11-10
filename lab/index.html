@@ -16,17 +16,28 @@
 
 <script type="text/javascript">
     // 自动按键盘
-    function keyAuto(keys = []) {
-        let id = [];
-        if (typeof (keys) !== "object" || keys.length < 1) { return 0; }
-        for (let i = 0; i < keys.length; i++) {
-            id.push(setInterval(function () {
-                document.getElementsByTagName("body")[0].dispatchEvent(new KeyboardEvent("keydown", { key: keys[i] }));
-                document.getElementsByTagName("body")[0].dispatchEvent(new KeyboardEvent("keyup", { key: keys[i] }));
-            }, 1000));
+    window.keyAuto = (function () {
+        let o = {};
+        o.id = [];
+        o.newKeys = (keys) => {
+            if (typeof (keys) !== "object" || keys.length < 1) { return 0; }
+            for (let i = 0; i < keys.length; i++) {
+                o.id.push(setInterval(function () {
+                    document.getElementsByTagName("body")[0].dispatchEvent(new KeyboardEvent("keydown", { key: keys[i] }));
+                    document.getElementsByTagName("body")[0].dispatchEvent(new KeyboardEvent("keyup", { key: keys[i] }));
+                }, 1000));
+            }
         }
-        return id;
-    }
+
+        o.stopAll = () => {
+            while (o.id.length > 0) {
+                clearInterval(o.id.splice(0, 1)[0]);
+            }
+            return 0;
+        }
+
+        return o;
+    })();
 
     window.load = (function () {
         let o = {};
@@ -63,10 +74,10 @@
                     if (o.loaded.indexOf(url) >= 0) return 0;
                     // Skip.addJs(document.head, url);
                     $.ajax({
-                            url: url,
-                            async: false,
-                            dataType: "script"
-                        })
+                        url: url,
+                        async: false,
+                        dataType: "script"
+                    })
                     // $.getScript(url);
                     o.loaded.push(url);
                 })
@@ -132,7 +143,7 @@
                 p.pop();
                 return p.join("/");
             })(),
-            name: document.title,
+            // name: document.title,
             id: jsPsych.randomization.randomID(),
             url: "/common/recevice.php",
             end_html: "感谢你参与本次实验，本次实验到这里就结束了",
