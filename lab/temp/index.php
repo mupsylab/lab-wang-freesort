@@ -23,6 +23,8 @@ timeline.push({
     stimulus: "123"
 })
 
-mupsyStart(timeline);
+mupsyStart({
+    timeline: timeline
+});
 </script>
 </html>
