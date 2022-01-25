@@ -18,7 +18,8 @@
 </body>
 <script type="text/javascript">
 let timeline = [];
-timeline.push({
+let info = {};
+timeline.push(info_get(), {
     type: "html-keyboard-response",
     stimulus: "123"
 })

@@ -216,7 +216,7 @@
             type: "survey-html-form",
             preamble: "<p style = 'color : white'>你完整参与本次实验的次数是</p>",
             html: function () {
-                let data = localStorage.getItem(info["subj_idx"]) ? JSON.parse(localStorage.getItem(info["subj_idx"]))["frequencyOfExper"] : 0;
+                let data = localStorage.getItem(info["subj_idx"]) ? parseInt(JSON.parse(localStorage.getItem(info["subj_idx"]))["series"]) : 0;
                 return "<p><input name='Q0' type='number' value='" + data + "' min='0' required/></p>"
             },
             button_label: "继续",
@@ -224,6 +224,31 @@
                 info["series"] = data.response.Q0;
             }
         }, {
+            timeline: [{
+                type: "html-button-response",
+                stimulus: function() {
+                    let tmpTxt = "";
+                    Object.keys(info).forEach((v,i) => {
+                        tmpTxt += `<p>${v}: ${info[v]}</p>`;
+                    });
+                    return `
+                    <p>你当前的被试信息为：</p>
+                    ${tmpTxt}
+                <p>你当前已存有被试信息，若确认无误，无需重新填写。</p>
+                `
+                },
+                choices: ["确认无误", "有误修改"],
+                on_finish: function(data) { 
+                    if(data.response == 1) {
+                        localStorage.removeItem(info["subj_idx"]);
+                    }
+                }
+            }],
+            conditional_function: function() {
+                return localStorage.getItem(info["subj_idx"]) ? true : false;
+            }
+        }, {
+            timeline: [{
             type: "survey-html-form",
             preamble: "<p style =' color : white'>你的名字是</p>",
             html: function () {
@@ -278,6 +303,10 @@
                 let edu = ["below primary school", "primary school", "junior middle school", "high school", "university", "master", "doctor", "other"];
 
                 info["Education"] = edu[parseInt(data.response.Q0) - 1];
+            }
+        }],
+            conditional_function: function() { 
+                return localStorage.getItem(info["subj_idx"]) ? false : true;
             }
         }];
         if (other.length > 0) { other.forEach(c => { a.push(c); }); }
