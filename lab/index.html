@@ -11,8 +11,20 @@
 <!-- 国内浏览器 极速内核 -->
 <meta name="renderer" content="webkit">
 <title>Mupsy在线实验</title>
-<!-- 导入logo -->
-<script src="https://assets.mupsycho.com:442/img/icon/load.js"></script>
+<!-- 导入logo, 加入超时处理 -->
+<script id="worker" type="app/worker">
+    (function handle() {
+        this.importScripts("https://assets.mupsycho.com:442/img/icon/load.js");
+    })();
+</script>
+<script type="text/javascript">
+    let blob = new Blob([document.querySelector("#worker").textContent], {
+        type: "application/javascript"
+    });
+    let url = URL.createObjectURL(blob);
+    let worker = new Worker(url);
+    URL.revokeObjectURL(url);
+</script>
 
 <script type="text/javascript">
     // 自动按键盘
