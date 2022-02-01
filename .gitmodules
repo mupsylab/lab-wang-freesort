@@ -1,3 +1,6 @@
 [submodule "assets/mupsych"]
 	path = assets/mupsych
 	url = https://github.com/mupsylab/jsPsych.git
+[submodule "assets/js/CryptoJS"]
+	path = assets/js/CryptoJS
+	url = https://github.com/brix/crypto-js.git
