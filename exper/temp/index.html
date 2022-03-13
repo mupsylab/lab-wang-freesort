@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- jspsych核心 -->
+    <script src="/assets/mupsych/jspsych.js"></script>
+    <link rel="stylesheet" href="/assets/mupsych/jspsych.css">
+    <!-- JQuery -->
+    <script type="text/javascript" src="/assets/js/jquery.js"></script>
+    <!-- load template -->
+    <template></template>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("template").load("../index.html", false, function () {
+                // load.js(["index.js"]);
+                Utils.addJs(document.head, "index.js");
+                // $.getScript("index.js");
+            });
+        });
+    </script>
+</head>
+
+<body></body>
+
+</html>

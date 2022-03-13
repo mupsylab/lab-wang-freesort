@@ -1,0 +1,26 @@
+<meta charset="utf-8">
+<meta http-equiv="content-Type" content="text/html; charset=UTF-8">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" > -->
+<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="robots" content="none">
+<meta name="author" content="Cheng-Dong">
+<meta name="keywords" content="mupsy,psylab">
+<meta name="generator" content="Mupsy 6.5.2">
+<!-- 国内浏览器 极速内核 -->
+<meta name="renderer" content="webkit">
+<title>Mupsy在线实验</title>
+<!-- 导入logo, 加入超时处理 -->
+<script id="worker" type="app/worker">
+    (function handle() {
+        this.importScripts("https://assets.mupsycho.com:442/img/icon/load.js");
+    })();
+</script>
+<script type="text/javascript">
+    let blob = new Blob([document.querySelector("#worker").textContent], {
+        type: "application/javascript"
+    });
+    let url = URL.createObjectURL(blob);
+    let worker = new Worker(url);
+    URL.revokeObjectURL(url);
+</script>

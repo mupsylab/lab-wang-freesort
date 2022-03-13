@@ -6,4 +6,6 @@
 
 common/
 lab/*/
+exper/*/
 !lab/temp/
+!exper/temp/
