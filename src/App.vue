@@ -41,6 +41,6 @@ const trial = {
 jsPsych.run([trial]);
 
 export default {
-  name: 'App'
+    name: "App"
 }
 </script>
