@@ -1,11 +1,2 @@
+node_modules
 .DS_Store
-.user.ini
-.htaccess
-.well-known/
-.venv/
-
-common/
-lab/*/
-exper/*/
-!lab/temp/
-!exper/temp/
