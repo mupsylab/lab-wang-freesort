@@ -8,8 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@jspsych/plugin-call-function": "^1.1.2",
+    "@jspsych/plugin-fullscreen": "^1.1.2",
+    "@jspsych/plugin-html-button-response": "^1.1.2",
     "@jspsych/plugin-html-keyboard-response": "^1.1.1",
+    "@jspsych/plugin-instructions": "^1.1.2",
+    "@jspsych/plugin-preload": "^1.1.2",
+    "@jspsych/plugin-survey-html-form": "^1.0.2",
     "core-js": "^3.8.3",
+    "jquery": "^3.6.3",
     "jspsych": "^7.3.0",
     "vue": "^3.2.13"
   },
@@ -36,7 +43,13 @@
     },
     "rules": {
       "strict": "off",
-      "vue/no-unused-components": "off"
+      "vue/no-unused-components": "off",
+      "generator-star-spacing": "off",
+      "no-debugger": "off",
+      "no-tabs": "off",
+      "no-unused-vars": "off",
+      "no-console": "off",
+      "no-irregular-whitespace": "off"
     }
   },
   "browserslist": [
@@ -45,7 +58,10 @@
     "not dead",
     "not ie 11"
   ],
-  "vue/no-unused-components": ["error", {
-    "ignoreWhenBindingPresent": true
-  }]
+  "vue/no-unused-components": [
+    "error",
+    {
+      "ignoreWhenBindingPresent": true
+    }
+  ]
 }

@@ -3,10 +3,6 @@
 </template>
 
 <style>
-body {
-    background: grey;
-}
-
 canvas {
     background: grey;
     bottom: 0;
