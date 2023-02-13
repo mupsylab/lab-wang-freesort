@@ -1,0 +1,15 @@
+{
+    "plugins": [
+        [
+            "transform-remove-console",
+            {
+                "exclude": [
+                    "error",
+                    "warn",
+                    "log"
+                ]
+            }
+        ],
+        "@babel/plugin-proposal-private-methods"
+    ]
+}
