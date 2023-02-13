@@ -71,9 +71,10 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service build && electron .",
-    "dist": "vue-cli-service build && electron-builder --win --x64 --dir",
-    "pack": "vue-cli-service build && electron-builder",
-    "pack-all": "vue-cli-service build && electron-builder --mac --win --linux --x64 --x32 --arch"
+    "dist": "vue-cli-service build && electron-builder --dir",
+    "pack": "vue-cli-service build && electron-builder --win",
+    "pack-x64": "vue-cli-service build && electron-builder --win --x64",
+    "pack-all": "vue-cli-service build && electron-builder -mwl"
   },
   "dependencies": {
     "@jspsych/plugin-call-function": "^1.1.2",
