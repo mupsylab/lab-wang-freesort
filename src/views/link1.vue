@@ -27,14 +27,14 @@ const jsPsych = initJsPsych({
       session.stopMonitor();
     } else {
       session.onlineSave(session.t["getData"]().csv(), `${Config.experId}-ver${Config.version}-subj${session.getInfo("subjIdx")}`, function () {
-        let DOM = jsPsych.DOM_container;
+        let DOM = jsPsych.getDisplayElement();
         DOM.innerHTML = "当前正在上传数据，进度为：" + `${session.t.Config.uploadProgress}/${session.t.Config.uploadLength}`;
         if (session.t.Config.uploadProgress == session.t.Config.uploadLength) {
           DOM.innerHTML = "上传成功，可以关闭窗口啦～";
           session.stopMonitor();
         }
       }, function () {
-        let DOM = jsPsych.DOM_container;
+        let DOM = jsPsych.getDisplayElement();
         DOM.innerHTML = "上传失败，请联系研究人员。";
       });
     }
@@ -147,7 +147,7 @@ const timeline = [{
   button_label: "全屏进入实验",
   message: '<p style="margin: 0 0 53px 0;">欢迎参加本实验，请点击下方按钮进入全屏状态。</p>'
 }];
-window.session = session;
+
 timeline.push({
   type: jsPsychCallFunction,
   func: () => {
