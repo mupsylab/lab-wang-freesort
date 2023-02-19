@@ -53,16 +53,11 @@ class Questionnaire {
                     document.querySelectorAll("label").forEach(v => {
                         v.style.backgroundColor = "";
                     });
-                    document.querySelectorAll("label:has(input:checked)").forEach(v => {
-                        v.style.backgroundColor = "#9d9d9d";
+                    document.querySelectorAll("input:checked").forEach(v => {
+                        v.parentElement.style.backgroundColor = "#9d9d9d";
                     });
                 }
             });
-            // document.querySelectorAll(".ChBox").forEach(v => {
-            //     v.style.gridTemplateColumns = `repeat(auto-fill, calc((100% - ${
-            //         parseInt(v.getAttribute("cLong"))
-            //     }px) / ${parseInt(v.getAttribute("long"))}))`;
-            // });
         } else {
             document.querySelectorAll("input[type=range]").forEach(c => {
                 c.oninput = (e) => {
@@ -76,8 +71,8 @@ class Questionnaire {
                     document.querySelectorAll("label").forEach(v => {
                         v.style.backgroundColor = "";
                     });
-                    document.querySelectorAll("label:has(input:checked)").forEach(v => {
-                        v.style.backgroundColor = "#9d9d9d";
+                    document.querySelectorAll("input:checked").forEach(v => {
+                        v.parentElement.style.backgroundColor = "#9d9d9d";
                     });
                 }
             });

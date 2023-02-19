@@ -107,6 +107,7 @@ const timeline = [{
         xhr.onload = function (e) {
           if (this.status == 200) {
             this.response.text().then(e => {
+              progress[v] = 1;
               session.html = [v, e];
             });
           } else {
@@ -114,9 +115,6 @@ const timeline = [{
             location.reload();
           }
         };
-        xhr.onprogress = (e) => {
-          progress[v] = e.loaded / e.total;
-        }
         xhr.ontimeout = function (event) {
           alert('请求超时！请检查你的网络！' + v);
           location.reload();
@@ -136,10 +134,15 @@ const timeline = [{
         `);
         if ((Object.keys(session.html).length + Object.keys(session.media).length) == (arr1.length + arr2.length)) {
           clearInterval(session.t["cca"]);
-          jsPsych.resumeExperiment();
+          jsPsych.pluginAPI.setTimeout(() => {
+            jsPsych.resumeExperiment();
+          }, 500);
         }
       }, 500)
     ]
+  },
+  on_finish: () => {
+    jsPsych.pluginAPI.clearAllTimeouts();
   }
 }, {
   type: jsPsychFullscreen,
