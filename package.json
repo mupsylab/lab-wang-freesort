@@ -14,7 +14,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "legalTrademarks": "mupsy2023"
@@ -87,7 +89,8 @@
     "core-js": "^3.8.3",
     "jquery": "^3.6.3",
     "jspsych": "^7.3.0",
-    "vue": "^3.2.13"
+    "vue": "^3.2.13",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
