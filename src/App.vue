@@ -40,6 +40,16 @@ const jsPsych = initJsPsych({
     }
   }
 });
+session.t = [
+      "getData", () => {
+        return jsPsych
+          .data
+          .get()
+          .filter({ save: true })
+          .addToAll(session.getAllInfo())
+          .filterColumns(session.getInfoKeys().concat(["questionId", "answer"]))
+      }
+    ];
 const timeline = [{
   timeline: [{
     type: jsPsychHtmlKeyboardResponse,
@@ -73,17 +83,6 @@ const timeline = [{
           if (this.status == 200) {
             var blob = this.response;
             session.media = [v, URL.createObjectURL(blob)];
-
-            let sum = 0;
-            Object.keys(progress).forEach((v, i) => {
-              sum += progress[v]
-            });
-            $("#jspsych-content").text(`
-                正在加载实验资源，已加载：${parseInt(sum / (arr1.length + arr2.length) * 100).toString()}%
-                `);
-            if ((Object.keys(session.html).length + Object.keys(session.media).length) == (arr1.length + arr2.length)) {
-              jsPsych.resumeExperiment();
-            }
           } else {
             alert("加载图片出错，位置于：" + v);
             location.reload();
@@ -109,17 +108,6 @@ const timeline = [{
           if (this.status == 200) {
             this.response.text().then(e => {
               session.html = [v, e];
-
-              let sum = 0;
-              Object.keys(progress).forEach((v, i) => {
-                sum += progress[v]
-              });
-              $("#jspsych-content").text(`
-                正在加载实验资源，已加载：${parseInt(sum / (arr1.length + arr2.length) * 100).toString()}%
-                `);
-              if ((Object.keys(session.html).length + Object.keys(session.media).length) == (arr1.length + arr2.length)) {
-                jsPsych.resumeExperiment();
-              }
             });
           } else {
             alert("加载图片出错，位置于：" + v);
@@ -136,6 +124,22 @@ const timeline = [{
         xhr.send();
       });
     });
+    session.t = [
+      "cca",
+      setInterval(() => {
+        let sum = 0;
+        Object.keys(progress).forEach((v,i) => {
+          sum += progress[v];
+        });
+        $("#jspsych-content").text(`
+          正在加载实验资源，已加载：${parseInt(sum / (arr1.length + arr2.length) * 100).toString()}%
+        `);
+        if ((Object.keys(session.html).length + Object.keys(session.media).length) == (arr1.length + arr2.length)) {
+          clearInterval(session.t["cca"]);
+          jsPsych.resumeExperiment();
+        }
+      }, 500)
+    ]
   }
 }, {
   type: jsPsychFullscreen,
@@ -143,14 +147,8 @@ const timeline = [{
   button_label: "全屏进入实验",
   message: '<p style="margin: 0 0 53px 0;">欢迎参加本实验，请点击下方按钮进入全屏状态。</p>'
 }];
-
+window.session = session;
 timeline.push({
-  type: jsPsychHtmlButtonResponse,
-  stimulus: () => {
-    return session.html["instruction_total"];
-  },
-  choices: ["下一页"]
-}, {
   type: jsPsychCallFunction,
   func: () => {
     session.t = [
@@ -296,16 +294,6 @@ timeline.push({
 export default {
   name: "App",
   mounted() {
-    session.t = [
-      "getData", () => {
-        return jsPsych
-          .data
-          .get()
-          .filter({ save: true })
-          .addToAll(session.getAllInfo())
-          .filterColumns(session.getInfoKeys().concat(["questionId", "answer"]))
-      }
-    ];
     if (!Config.debug) session.startMonitor();
     if (Config.autoId) {
       $.ajax({
