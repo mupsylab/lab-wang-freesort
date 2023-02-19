@@ -54,7 +54,7 @@ class Questionnaire {
                         v.style.backgroundColor = "";
                     });
                     document.querySelectorAll("label:has(input:checked)").forEach(v => {
-                        v.style.backgroundColor = "grey";
+                        v.style.backgroundColor = "#9d9d9d";
                     });
                 }
             });
@@ -77,7 +77,7 @@ class Questionnaire {
                         v.style.backgroundColor = "";
                     });
                     document.querySelectorAll("label:has(input:checked)").forEach(v => {
-                        v.style.backgroundColor = "grey";
+                        v.style.backgroundColor = "#9d9d9d";
                     });
                 }
             });
