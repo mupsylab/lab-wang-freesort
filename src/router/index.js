@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import View1 from "../views/link1.vue";
-
+const View1 = () => import("../views/link1.vue");
 const routes = [{
     path: "/",
     component: View1
