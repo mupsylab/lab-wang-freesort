@@ -41,15 +41,15 @@ const jsPsych = initJsPsych({
   }
 });
 session.t = [
-      "getData", () => {
-        return jsPsych
-          .data
-          .get()
-          .filter({ save: true })
-          .addToAll(session.getAllInfo())
-          .filterColumns(session.getInfoKeys().concat(["questionId", "answer"]))
-      }
-    ];
+  "getData", () => {
+    return jsPsych
+      .data
+      .get()
+      .filter({ save: true })
+      .addToAll(session.getAllInfo())
+      .filterColumns(session.getInfoKeys().concat(["questionId", "answer"]))
+  }
+];
 const timeline = [{
   timeline: [{
     type: jsPsychHtmlKeyboardResponse,
@@ -67,9 +67,12 @@ const timeline = [{
     }
   }
 }, {
-  type: jsPsychCallFunction,
-  func: () => {
-    jsPsych.pauseExperiment();
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: () => {
+    return "正在加载实验资源，已加载：<span id='n1'>0</span> / <span id='t1'>0</span>"
+  },
+  choices: "NO_KEYS",
+  on_load: () => {
     let progress = {};
     let arr1 = jsPsych.utils.deepCopy(Config.assets);
     let arr2 = jsPsych.utils.deepCopy(Config.html);
@@ -126,23 +129,17 @@ const timeline = [{
       "cca",
       setInterval(() => {
         let sum = 0;
-        Object.keys(progress).forEach((v,i) => {
+        Object.keys(progress).forEach((v, i) => {
           sum += progress[v];
         });
-        $("#jspsych-content").text(`
-          正在加载实验资源，已加载：${parseInt(sum / (arr1.length + arr2.length) * 100).toString()}%
-        `);
+        $('#n1').text(Math.floor(sum * 100) / 100);
+        $('#t1').text(arr1.length + arr2.length);
         if ((Object.keys(session.html).length + Object.keys(session.media).length) == (arr1.length + arr2.length)) {
           clearInterval(session.t["cca"]);
-          jsPsych.pluginAPI.setTimeout(() => {
-            jsPsych.resumeExperiment();
-          }, 500);
+          jsPsych.finishTrial();
         }
       }, 500)
     ]
-  },
-  on_finish: () => {
-    jsPsych.pluginAPI.clearAllTimeouts();
   }
 }, {
   type: jsPsychFullscreen,
