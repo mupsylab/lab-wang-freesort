@@ -28,8 +28,8 @@ const jsPsych = initJsPsych({
     } else {
       session.onlineSave(session.t["getData"]().csv(), `${Config.experId}-ver${Config.version}-subj${session.getInfo("subjIdx")}`, function () {
         let DOM = jsPsych.getDisplayElement();
-        DOM.innerHTML = "当前正在上传数据，进度为：" + `${session.t.Config.uploadProgress}/${session.t.Config.uploadLength}`;
-        if (session.t.Config.uploadProgress == session.t.Config.uploadLength) {
+        DOM.innerHTML = "当前正在上传数据，进度为：" + `${session.t.uploadProgress}/${session.t.uploadLength}`;
+        if (session.t.uploadProgress == session.t.uploadLength) {
           DOM.innerHTML = "上传成功，可以关闭窗口啦～";
           session.stopMonitor();
         }
@@ -310,7 +310,6 @@ export default {
         }
       })
     }
-
     jsPsych.run(timeline);
   }
 }
