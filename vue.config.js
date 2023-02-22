@@ -9,7 +9,7 @@ module.exports = defineConfig({
     config
       .plugin("html")
       .tap(args => {
-        args[0].title = "行人过街决策的研究";
+        args[0].title = "jsPsych统一模板";
         return args;
       })
   }
