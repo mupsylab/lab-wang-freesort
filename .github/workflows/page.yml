@@ -3,6 +3,8 @@ name: main
 on:
   push:
     branches: [master]
+    tags:
+    - "*"
   workflow_dispatch:
   
 jobs:
