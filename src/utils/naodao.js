@@ -72,7 +72,7 @@ class Naodao {
         }
     }
     save() {
-        str = this.getData;
+        let str = this.getData;
         if (this.__token === 'preview' || this.__location.includes('file://')) {
             this.offlineSave(str());
         } else {
@@ -81,7 +81,7 @@ class Naodao {
     }
     offlineSave(str, id = this.__id) {
         try {
-            const blobToSave = new Blob([str()], {
+            const blobToSave = new Blob([str], {
                 type: "text/plain",
             });
             let blobURL = "";
@@ -105,6 +105,10 @@ class Naodao {
     onlineSave(str, state = 0, id = this.__id, token = this.__token) {
         fetch(this.__preUrl + '/user/jsPsych/results', {
             method: "POST",
+            headers: {
+                "accept": "application/json, text/plain, */*",
+                "content-type": "application/json",
+            },
             body: JSON.stringify({
                 experimentId: id,
                 token: token,
