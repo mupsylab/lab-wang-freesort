@@ -5,7 +5,7 @@
   "build": {
     "appId": "jspsychTemplate",
     "productName": "jspsych-template",
-    "icon": "public/favicon.ico",
+    "icon": "public/favicon.png",
     "copyright": "Copyright © 2023",
     "compression": "maximum",
     "asar": true,
