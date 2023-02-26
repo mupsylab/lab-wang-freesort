@@ -35,12 +35,12 @@ jobs:
         run: npm run pack
   
       - name: Cleanup Artifacts for Windows
-        if: matrix.os == "windows-latest"
+        if: ${{ matrix.os }} == "windows-latest"
         run: |
           npx rimraf "release/!(*.exe)"
   
       - name: Cleanup Artifacts for MacOS
-        if: matrix.os == "macos-latest"
+        if: ${{ matrix.os }} == "macos-latest"
         run: |
           npx rimraf "release/!(*.dmg)"
   
