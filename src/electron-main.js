@@ -7,20 +7,24 @@ app.on('ready', () => {
   // 创建主窗口
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    frame: true
   });
-
+  mainWindow.loadFile('dist/index.html');
   // 加载页面文件
-  if (app.isPackaged) {
-    // 如果是打包好的就加载打包的 HTML 文件
-    mainWindow.loadFile('dist/index.html');
-  }else {
-    // 如果没有打包就直接从本地服务器加载
-    mainWindow.loadURL('http://localhost:8080/');
-  }
+  // if (app.isPackaged) {
+  //   // 如果是打包好的就加载打包的 HTML 文件
+  //   mainWindow.loadFile('dist/index.html');
+  // }else {
+  //   // 如果没有打包就直接从本地服务器加载
+  //   mainWindow.loadURL('http://localhost:8080/');
+  // }
 
   // 关闭事件
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+});
+app.on("window-all-closed", () => {
+  app.quit();
 });

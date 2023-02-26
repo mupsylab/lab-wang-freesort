@@ -132,7 +132,7 @@ const timeline = [{
   }
 }, {
   type: jsPsychFullscreen,
-  fullscreen_mode: false,
+  fullscreen_mode: !Config.debug,
   button_label: "全屏进入实验",
   message: '<p style="margin: 0 0 53px 0;">欢迎参加本实验，请点击下方按钮进入全屏状态。</p>'
 }];

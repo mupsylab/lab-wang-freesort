@@ -3,67 +3,69 @@
   "version": "1.0.0",
   "anthor": "mupsy",
   "build": {
-    "appId": "lab-cas-09",
-    "productName": "lab-cas-09",
+    "appId": "jspsychTemplate",
+    "productName": "jspsych-template",
     "icon": "public/favicon.ico",
     "copyright": "Copyright © 2023",
     "compression": "maximum",
     "asar": true,
-    "win": {
-      "icon": "public/favicon.ico",
+    "artifactName": "${productName}-${version}-${platform}-${arch}.${ext}",
+    "mac": {
+      "category": "public.app-category.productivity",
       "target": [
         {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
+          "target": "dmg",
+          "arch": "universal"
         }
-      ],
-      "legalTrademarks": "mupsy2023"
+      ]
     },
     "dmg": {
       "contents": [
         {
-          "x": 0,
-          "y": 0,
-          "path": "/Application"
+          "x": 380,
+          "y": 280,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 110,
+          "y": 280,
+          "type": "file"
         }
-      ]
+      ],
+      "window": {
+        "width": 500,
+        "height": 500
+      }
     },
-    "linux": {
-      "icon": "public/favicon.ico"
-    },
-    "mac": {
-      "icon": "public/favicon.ico"
+    "win": {
+      "icon": "public/favicon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "verifyUpdateCodeSignature": false,
+      "legalTrademarks": "mupsy2023"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": false
+      "createStartMenuShortcut": false,
+      "removeDefaultUninstallWelcomePage": true
     },
     "directories": {
       "output": "release"
     },
     "files": [
-      "**/*",
-      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
-      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
-      "!**/node_modules/*.d.ts",
-      "!**/node_modules/.bin",
-      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
-      "!.editorconfig",
-      "!**/._*",
-      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
-      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
-      "!**/{appveyor.yml,.travis.yml,circle.yml}",
-      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
-      "!**/src/components/**",
-      "!**/src/assets/**",
-      "!**/src/main.js",
-      "!**/src/App.vue",
-      "!**/public/index.html"
+      "dist",
+      "**/src/electron-main.js"
     ]
   },
   "main": "src/electron-main.js",
@@ -73,10 +75,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service build && electron .",
-    "dist": "vue-cli-service build && electron-builder --dir",
-    "pack": "vue-cli-service build && electron-builder --win",
-    "pack-x64": "vue-cli-service build && electron-builder --win --x64",
-    "pack-all": "vue-cli-service build && electron-builder -mwl"
+    "pack": "electron-builder -p always"
   },
   "dependencies": {
     "@jspsych/plugin-call-function": "^1.1.2",
