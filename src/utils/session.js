@@ -21,6 +21,7 @@ class Session {
     #mediaAdd;
     #tempD;
     #html;
+    #url;
     #strSplice(str = "", n = 1024) {
         let strArr = [];
         for (var i = 0, l = str.length; i < l / n; i++) {
@@ -38,12 +39,22 @@ class Session {
         this.#tempD = {
             uploadLength: 0, // upload length to online
             uploadProgress: 0, // upload progress to online
+            getFileName: () => { return ""; },
             getData: () => { return ""; } // get the data from jspsych
         };
+        this.#url = "./";
     }
     get onlineSaveProgress() {
         return [this.t["uploadProgress"], this.t["uploadLength"]];
     }
+    
+    get url() {
+        return this.#url;
+    }
+    set url(url) {
+        this.#url = url;
+    }
+
     get media() {
         return this.#mediaAdd;
     }
@@ -144,7 +155,7 @@ class Session {
 
         // repeated ?
         let status = $.ajax({
-            url: "./data/origin/" + id + ".csv",
+            url: this.#url + "data/origin/" + id + ".csv",
             type: "GET",
             async: false
         });
@@ -153,7 +164,7 @@ class Session {
             repeatI++;
             filename = id + "_" + repeatI.toString();
             status = $.ajax({
-                url: "./data/origin/" + filename + ".csv",
+                url: this.#url + "data/origin/" + filename + ".csv",
                 type: "GET",
                 async: false
             });
@@ -161,7 +172,7 @@ class Session {
         let i = 0;
         const uploadF = () => {
             $.ajax({
-                url: "./data/upload.php",
+                url: this.#url + "data/upload.php",
                 type: "POST",
                 data: {
                     data: strs[i],

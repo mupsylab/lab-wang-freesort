@@ -10,6 +10,7 @@ import jsPsychFullscreen from '@jspsych/plugin-fullscreen';
 import jsPsychSurveyHtmlForm from '@jspsych/plugin-survey-html-form';
 
 import Config from "@/config";
+import { createApp, defineAsyncComponent, ref } from "vue";
 
 const session = new Session({
   startTime: new Date().toLocaleDateString() + "-" + new Date().toLocaleTimeString(),
@@ -17,26 +18,36 @@ const session = new Session({
   subjIdx: "002",
   finish: false
 });
+session.t = [
+  "getFileName", () => {
+    return `${Config.experId}-ver${Config.version}-subj${session.getInfo("subjIdx")}`
+  }
+];
 const jsPsych = initJsPsych({
   display_element: "exp",
   on_finish: () => {
     session.addInfo("endTime", new Date().toLocaleDateString() + "-" + new Date().toLocaleTimeString());
     session.changeInfo("finish", true);
-    if (!Config.upload) {
-      session.offlineSave(session.t["getData"]().csv(), `${Config.experId}-ver${Config.version}-subj${session.getInfo("subjIdx")}`);
+    if (!Config.upload || (document.location.protocol == "file:" && session.url == "./")) {
+      session.offlineSave(session.t["getData"]().csv(), session.t.getFileName());
       session.stopMonitor();
     } else {
-      session.onlineSave(session.t["getData"]().csv(), `${Config.experId}-ver${Config.version}-subj${session.getInfo("subjIdx")}`, function () {
-        let DOM = jsPsych.getDisplayElement();
-        DOM.innerHTML = "当前正在上传数据，进度为：" + `${session.t.uploadProgress}/${session.t.uploadLength}`;
-        if (session.t.uploadProgress == session.t.uploadLength) {
-          DOM.innerHTML = "上传成功，可以关闭窗口啦～";
-          session.stopMonitor();
-        }
-      }, function () {
-        let DOM = jsPsych.getDisplayElement();
-        DOM.innerHTML = "上传失败，请联系研究人员。";
-      });
+      session.onlineSave(
+        session.t["getData"]().csv(),
+        session.t.getFileName(),
+        function () {
+          let DOM = jsPsych.getDisplayElement();
+          DOM.innerHTML = "当前正在上传数据，进度为：" + `${session.t.uploadProgress}/${session.t.uploadLength}`;
+          if (session.t.uploadProgress == session.t.uploadLength) {
+            DOM.innerHTML = "上传成功，可以关闭窗口啦～";
+            session.stopMonitor();
+          }
+        },
+        function () {
+          let DOM = jsPsych.getDisplayElement();
+          DOM.innerHTML = "上传失败，请联系研究人员。";
+          session.offlineSave(session.t["getData"]().csv(), session.t.getFileName());
+        });
     }
   }
 });
@@ -69,83 +80,102 @@ const timeline = [{
 }, {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: () => {
-    return "正在加载实验资源，已加载：<span id='n1'>0</span> / <span id='t1'>0</span>"
+    return "<div>正在加载实验资源，已加载：<span id='n1'>0</span> / <span id='t1'>0</span></div><div id='loadingBox'></div>"
   },
   choices: "NO_KEYS",
   on_load: () => {
+    const BeginLoading = defineAsyncComponent(() => import("@/components/BeginLoading.vue"));
+    const loading = ref(0);
+    const playing = ref(false);
+    const box1 = createApp(BeginLoading);
+    box1.mount("#loadingBox");
+    box1.provide("loading", loading);
+    box1.provide("playing", playing);
+    playing.value = true;
+
     let progress = {};
     let arr1 = jsPsych.utils.deepCopy(Config.assets);
     let arr2 = jsPsych.utils.deepCopy(Config.html);
+
+    const downloadXHR = (id, url, track = true) => {
+      return new Promise((reslove, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+        xhr.addEventListener('loadstart', (e) => { });
+        xhr.addEventListener('load', function (e) {
+          reslove(this);
+        });
+        xhr.addEventListener('loadend', (e) => { });
+        xhr.addEventListener('progress', (e) => {
+          progress[id] = track ? e.loaded / e.total : 0;
+        });
+        xhr.addEventListener('error', (e) => {
+          reject("error");
+        });
+        xhr.addEventListener('abort', (e) => {
+          reject("abort");
+        });
+        xhr.send();
+      });
+    };
+    const updataXHR = () => {
+      let sum = 0;
+      Object.keys(progress).forEach((v, i) => {
+        sum += progress[v];
+      });
+      $('#n1').text(Math.floor(sum * 100) / 100);
+      // document.querySelector("#loading").dataset.progress = Math.floor((sum / (arr1.length + arr2.length)) * 100);
+      loading.value = Math.floor((sum / (arr1.length + arr2.length)) * 100);
+      $('#t1').text(arr1.length + arr2.length);
+      if ((Object.keys(session.html).length + Object.keys(session.media).length) == (arr1.length + arr2.length)) {
+        playing.value = false;
+        // jsPsych.finishTrial();
+      }
+    };
     arr1.forEach((v, i) => {
       progress[v] = 0;
-      new Promise(() => {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', `./assets/media/${v}`, true);
-        xhr.responseType = 'blob';
-        xhr.onload = function (e) {
-          if (this.status == 200) {
-            var blob = this.response;
-            session.media = [v, URL.createObjectURL(blob)];
+      downloadXHR(v, `./assets/media/${v}`)
+        .then(e => {
+          if (e.status == 200) {
+            session.media = [v, URL.createObjectURL(e.response)]
+            updataXHR();
           } else {
             alert("加载图片出错，位置于：" + v);
             location.reload();
           }
-        };
-        xhr.onprogress = (e) => {
-          progress[v] = e.loaded / e.total;
-        }
-        xhr.ontimeout = function (event) {
-          alert('请求超时！请检查你的网络！' + v);
-          location.reload();
-        }
-        xhr.send();
-      });
+        })
+        .catch(e => {
+          playing.value = false;
+          alert(`${e}! ${v}`);
+        });
     });
     arr2.forEach((v, i) => {
       progress[v] = 0;
-      new Promise(() => {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', `./assets/external_html/${v}.html`, true);
-        xhr.responseType = 'blob';
-        xhr.onload = function (e) {
-          if (this.status == 200) {
-            this.response.text().then(e => {
+      downloadXHR(v, `./assets/external_html/${v}.html`, false)
+        .then(e => {
+          if (e.status == 200) {
+            e.response.text().then(e => {
               progress[v] = 1;
               session.html = [v, e];
+              updataXHR();
             });
           } else {
             alert("加载图片出错，位置于：" + v);
             location.reload();
           }
-        };
-        xhr.ontimeout = function (event) {
-          alert('请求超时！请检查你的网络！' + v);
-          location.reload();
-        }
-        xhr.send();
-      });
-    });
-    session.t = [
-      "cca",
-      setInterval(() => {
-        let sum = 0;
-        Object.keys(progress).forEach((v, i) => {
-          sum += progress[v];
+        })
+        .catch(e => {
+          alert(`${e}! ${v}`);
+          playing.value = false;
         });
-        $('#n1').text(Math.floor(sum * 100) / 100);
-        $('#t1').text(arr1.length + arr2.length);
-        if ((Object.keys(session.html).length + Object.keys(session.media).length) == (arr1.length + arr2.length)) {
-          clearInterval(session.t["cca"]);
-          jsPsych.finishTrial();
-        }
-      }, 500)
-    ]
+    });
   }
 }, {
   type: jsPsychFullscreen,
-  fullscreen_mode: false,
+  fullscreen_mode: !Config.debug,
   button_label: "全屏进入实验",
-  message: '<p style="margin: 0 0 53px 0;">欢迎参加本实验，请点击下方按钮进入全屏状态。</p>'
+  message: '<p style="margin: 0 0 53px 0;">欢迎参加本实验，请点击下方按钮进入全屏状态。</p>' + document.location.protocol
 }];
 
 timeline.push({

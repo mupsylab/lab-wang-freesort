@@ -1,7 +1,7 @@
 module.exports = {
-    experId: "cas10",
+    experId: "cas",
     version: "1",
-    groupNum: 4,
+    groupNum: 1,
     autoId: false,
     debug: true,
     upload: true,
