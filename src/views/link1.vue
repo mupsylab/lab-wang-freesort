@@ -130,7 +130,7 @@ const timeline = [{
       $('#t1').text(arr1.length + arr2.length);
       if ((Object.keys(session.html).length + Object.keys(session.media).length) == (arr1.length + arr2.length)) {
         playing.value = false;
-        // jsPsych.finishTrial();
+        jsPsych.finishTrial();
       }
     };
     arr1.forEach((v, i) => {
@@ -142,6 +142,7 @@ const timeline = [{
             updataXHR();
           } else {
             alert("加载图片出错，位置于：" + v);
+            playing.value = false;
             location.reload();
           }
         })
@@ -162,6 +163,7 @@ const timeline = [{
             });
           } else {
             alert("加载图片出错，位置于：" + v);
+            playing.value = false;
             location.reload();
           }
         })

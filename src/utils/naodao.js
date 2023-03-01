@@ -33,6 +33,10 @@ class Naodao {
         _this.monitor();
         fetch(_this.__preUrl + '/user/canvasNode/insertRecord', {
             method: "POST",
+            headers: {
+                "accept": "application/json, text/plain, */*",
+                "content-type": "application/json",
+            },
             body: JSON.stringify({
                 nodeId: _this.__id,
                 recordId: _this.__token,
