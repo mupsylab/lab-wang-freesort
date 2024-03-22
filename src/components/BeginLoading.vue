@@ -3,7 +3,7 @@
 import { inject } from 'vue';
 
 const canvas = document.createElement('canvas'),
-    ctx = canvas.getContext('2d');
+      ctx = canvas.getContext('2d');
 export default {
     name: "BeginLoading",
     data() {
@@ -12,8 +12,8 @@ export default {
             loaderWidth = 310,
             loaderHeight = 16;
         return {
-            playing: inject("playing"),
-            progress: inject("loading"),
+            playing: inject("playing"), // 是否播放
+            progress: inject("loading"), // 进度条
             width: width,
             height: height,
             loaderWidth: loaderWidth,
@@ -128,5 +128,3 @@ export default {
 <template>
     <div id="loading" data-progress="0"></div>
 </template>
-
-<style></style>

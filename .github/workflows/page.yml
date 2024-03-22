@@ -1,11 +1,11 @@
-name: main
+name: Page
 
 on:
   push:
-    tags:
-    - "*"
+    branches:
+    - 'gh-page-build'
   workflow_dispatch:
-  
+
 jobs:
   docs:
     runs-on: ubuntu-latest
@@ -32,4 +32,4 @@ jobs:
           target_branch: gh-page
           build_dir: ./dist
         env:
-          GITHUB_TOKEN: ${{ secrets.Page }}
+          GITHUB_TOKEN: ${{ secrets.SECRET }}
