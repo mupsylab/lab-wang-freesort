@@ -1,25 +1,5 @@
-<script>
-export default {
-  name: "App",
-  data() {
-    return {}
-  },
-  setup() {
-    return {}
-  },
-  provide() {
-    return {
-      msg: "foo"
-    }
-  },
-  mounted() {},
-  props: {},
-  methods: {},
-  created() {
-    return {}
-  },
-  emits: []
-}
+<script setup>
+import { RouterView } from 'vue-router';
 </script>
 
 <template>

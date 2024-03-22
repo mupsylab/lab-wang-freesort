@@ -1,143 +1,87 @@
 {
-  "name": "jspsych-template",
-  "version": "1.1.0",
-  "anthor": "mupsy",
-  "build": {
-    "appId": "jspsychTemplate",
-    "productName": "jspsych-template",
-    "icon": "public/favicon.png",
-    "copyright": "Copyright © 2023",
-    "compression": "maximum",
-    "asar": true,
-    "artifactName": "${productName}-${version}-${platform}-${arch}.${ext}",
-    "mac": {
-      "category": "public.app-category.productivity",
-      "target": [
-        {
-          "target": "dmg",
-          "arch": "universal"
-        }
-      ]
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 380,
-          "y": 280,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 110,
-          "y": 280,
-          "type": "file"
-        }
-      ],
-      "window": {
-        "width": 500,
-        "height": 500
-      }
-    },
-    "win": {
-      "icon": "public/favicon.ico",
-      "target": [
-        {
-          "target": "portable",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ],
-      "verifyUpdateCodeSignature": false,
-      "legalTrademarks": "mupsy2023"
-    },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": true,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": false,
-      "removeDefaultUninstallWelcomePage": true
-    },
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "dist",
-      "**/src/electron-main.js"
-    ]
-  },
-  "main": "src/electron-main.js",
+  "name": "jspsychtemplate",
   "private": true,
+  "description": "jsPsych Experiment Template",
+  "version": "0.0.10",
+  "author": "mupsy",
+  "main": "src/electron-main.js",
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "start": "vue-cli-service build && electron .",
-    "pack": "electron-builder -p always"
+    "dev": "vite --host 0.0.0.0",
+    "preview": "vite preview",
+    "build": "vite build",
+    "build:win": "npm run build && electron-builder --win --config",
+    "build:mac": "npm run build && electron-builder --mac --config",
+    "build:linux": "npm run build && electron-builder --linux --config",
+    "pack": "npm run build && electron-builder --config"
   },
   "dependencies": {
-    "@jspsych/plugin-call-function": "^1.1.2",
-    "@jspsych/plugin-fullscreen": "^1.1.2",
-    "@jspsych/plugin-html-button-response": "^1.1.2",
-    "@jspsych/plugin-html-keyboard-response": "^1.1.1",
-    "@jspsych/plugin-instructions": "^1.1.2",
-    "@jspsych/plugin-preload": "^1.1.2",
-    "@jspsych/plugin-survey-html-form": "^1.0.2",
-    "core-js": "^3.8.3",
-    "jquery": "^3.6.3",
-    "jspsych": "^7.3.0",
-    "vue": "^3.2.13",
-    "vue-router": "^4.1.6"
+    "@jspsych/extension-mouse-tracking": "^1.0.3",
+    "@jspsych/extension-record-video": "^1.0.2",
+    "@jspsych/extension-webgazer": "^1.0.3",
+    "@jspsych/plugin-animation": "^1.1.3",
+    "@jspsych/plugin-audio-button-response": "^1.1.3",
+    "@jspsych/plugin-audio-keyboard-response": "^1.1.3",
+    "@jspsych/plugin-audio-slider-response": "^1.1.3",
+    "@jspsych/plugin-browser-check": "^1.0.3",
+    "@jspsych/plugin-call-function": "^1.1.3",
+    "@jspsych/plugin-canvas-button-response": "^1.1.3",
+    "@jspsych/plugin-canvas-keyboard-response": "^1.1.3",
+    "@jspsych/plugin-canvas-slider-response": "^1.1.3",
+    "@jspsych/plugin-categorize-animation": "^1.1.3",
+    "@jspsych/plugin-categorize-html": "^1.1.3",
+    "@jspsych/plugin-categorize-image": "^1.1.3",
+    "@jspsych/plugin-cloze": "^1.2.1",
+    "@jspsych/plugin-external-html": "^1.1.3",
+    "@jspsych/plugin-free-sort": "^1.0.3",
+    "@jspsych/plugin-fullscreen": "^1.2.1",
+    "@jspsych/plugin-html-audio-response": "^1.0.3",
+    "@jspsych/plugin-html-button-response": "^1.1.3",
+    "@jspsych/plugin-html-keyboard-response": "^1.1.3",
+    "@jspsych/plugin-html-slider-response": "^1.1.3",
+    "@jspsych/plugin-html-video-response": "^1.0.2",
+    "@jspsych/plugin-iat-html": "^1.1.3",
+    "@jspsych/plugin-iat-image": "^1.1.3",
+    "@jspsych/plugin-image-button-response": "^1.1.3",
+    "@jspsych/plugin-image-keyboard-response": "^1.1.3",
+    "@jspsych/plugin-image-slider-response": "^1.1.3",
+    "@jspsych/plugin-initialize-camera": "^1.0.2",
+    "@jspsych/plugin-initialize-microphone": "^1.0.3",
+    "@jspsych/plugin-instructions": "^1.1.4",
+    "@jspsych/plugin-maxdiff": "^1.1.3",
+    "@jspsych/plugin-mirror-camera": "^1.0.2",
+    "@jspsych/plugin-preload": "^1.1.3",
+    "@jspsych/plugin-reconstruction": "^1.1.3",
+    "@jspsych/plugin-resize": "^1.0.3",
+    "@jspsych/plugin-same-different-html": "^1.1.3",
+    "@jspsych/plugin-same-different-image": "^1.1.3",
+    "@jspsych/plugin-serial-reaction-time": "^1.1.4",
+    "@jspsych/plugin-serial-reaction-time-mouse": "^1.1.3",
+    "@jspsych/plugin-sketchpad": "^1.0.4",
+    "@jspsych/plugin-survey": "^0.2.2",
+    "@jspsych/plugin-survey-html-form": "^1.0.3",
+    "@jspsych/plugin-survey-likert": "^1.1.3",
+    "@jspsych/plugin-survey-multi-choice": "^1.1.3",
+    "@jspsych/plugin-survey-multi-select": "^1.1.3",
+    "@jspsych/plugin-survey-text": "^1.1.3",
+    "@jspsych/plugin-video-button-response": "^1.1.3",
+    "@jspsych/plugin-video-keyboard-response": "^1.1.3",
+    "@jspsych/plugin-video-slider-response": "^1.1.3",
+    "@jspsych/plugin-virtual-chinrest": "^2.0.3",
+    "@jspsych/plugin-visual-search-circle": "^1.2.1",
+    "@jspsych/plugin-webgazer-calibrate": "^1.0.3",
+    "@jspsych/plugin-webgazer-init-camera": "^1.0.3",
+    "@jspsych/plugin-webgazer-validate": "^1.0.3",
+    "jspsych": "^7.3.4",
+    "pinia": "^2.1.7",
+    "pixi.js": "^7.4.0",
+    "three": "^0.161.0",
+    "vue": "^3.4.19",
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-    "@babel/plugin-proposal-private-methods": "^7.18.6",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "babel-plugin-transform-remove-console": "^6.9.4",
-    "electron": "^23.0.0",
-    "electron-builder": "^23.6.0",
-    "electron-packager": "^17.1.1",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {
-      "strict": "off",
-      "vue/no-unused-components": "off",
-      "generator-star-spacing": "off",
-      "no-debugger": "off",
-      "no-tabs": "off",
-      "no-unused-vars": "off",
-      "no-console": "off",
-      "no-irregular-whitespace": "off"
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11"
-  ],
-  "vue/no-unused-components": [
-    "error",
-    {
-      "ignoreWhenBindingPresent": true
-    }
-  ]
+    "@vitejs/plugin-vue": "^5.0.4",
+    "electron": "^29.1.5",
+    "electron-builder": "^24.13.3",
+    "vite": "^5.1.4"
+  }
 }

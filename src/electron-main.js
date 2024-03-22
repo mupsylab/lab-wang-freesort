@@ -20,6 +20,8 @@ app.on('ready', () => {
   //   mainWindow.loadURL('http://localhost:8080/');
   // }
 
+  mainWindow.setMenu(null);
+
   // 关闭事件
   mainWindow.on('closed', () => {
     mainWindow = null;
