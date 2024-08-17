@@ -5,10 +5,15 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "main": "src/electron-main.ts",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pack": "npm run build && electron-builder --config",
+    "pack:win": "npm run build && electron-builder --win --config",
+    "pack:mac": "npm run build && electron-builder --mac --config",
+    "pack:linux": "npm run build && electron-builder --linux --config"
   },
   "dependencies": {
     "@jspsych/extension-mouse-tracking": "^1.0.3",
@@ -76,6 +81,8 @@
   "devDependencies": {
     "@types/node": "^22.2.0",
     "@vitejs/plugin-vue": "^5.1.2",
+    "electron": "^31.4.0",
+    "electron-builder": "^24.13.3",
     "typescript": "^5.5.3",
     "vite": "^5.4.0",
     "vue-tsc": "^2.0.29"
