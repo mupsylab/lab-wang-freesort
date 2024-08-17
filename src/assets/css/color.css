@@ -195,7 +195,7 @@
     --light-idegrey-8: #666666;
 }
 
-:root {
+.light {
     --dashboard-background: var(--light-idegrey-1);
     --dashboard-layout: var(--light-idegrey-4);
 
