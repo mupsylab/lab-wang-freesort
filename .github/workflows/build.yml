@@ -33,19 +33,26 @@ jobs:
   
       - name: Build Electron App for Windows
         if: matrix.os == 'windows-latest'
+        env:
+          GH_TOKEN: ${{ secrets.SECRET }}
         run: |
           npm run pack:win
           npx rimraf --glob "release/!(*.zip)"
 
       - name: Build Electron App for Mac
         if: matrix.os == 'macos-latest'
+        env:
+          GH_TOKEN: ${{ secrets.SECRET }}
         run: |
           npm run pack:mac
           npx rimraf --glob "release/!(*.dmg)"
 
       - name: Build Electron App for Linux
         if: matrix.os == 'ubuntu-latest'
+        env:
+          GH_TOKEN: ${{ secrets.SECRET }}
         run: |
+          sudo snap install snapcraft --classic 
           npm run pack:linux
           npx rimraf --glob "release/!(*.deb)"
 
