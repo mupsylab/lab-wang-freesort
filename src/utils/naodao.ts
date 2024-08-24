@@ -6,6 +6,7 @@ class Naodao {
     private __itemId = '';
     private __beginDate = '';
     public getData = () => { return ""; };
+
     public constructor() {
         this.init();
     }
@@ -53,7 +54,9 @@ class Naodao {
             result = await this.onlineSave(this.getData());
         }
         if(!result) {
-            alert("保存数据失败!");
+            this.parent_post_message(this.__token, this.__id, !1, 500, "实验作答失败，请刷新重新作答！");
+        } else {
+            this.parent_post_message(this.__token, this.__id, !0, 200, "实验作答完成，感谢你的耐心等待，继续下一步？");
         }
     }
     offlineSave(str: string, id: string = this.__id) {
@@ -101,6 +104,10 @@ class Naodao {
                 return false;
             }
           });
+    }
+
+    parent_post_message(recordId: string, nodeId: string, isCompleted: boolean, code: number, message: string) {
+        window.parent.postMessage({ recordId, nodeId, isCompleted, code, message });
     }
 }
 export default Naodao;
