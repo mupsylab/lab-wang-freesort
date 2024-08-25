@@ -1,7 +1,15 @@
+@font-face {
+  font-family: 'self-song';
+  src: url("./assets/font/song.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: self-song;
+  font-size: 16px;
   font-weight: 400;
+  line-height: 24px;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -9,20 +17,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+html, body {
   color: var(--font-color);
   background-color: var(--dashboard-background);
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  text-align: center;
 }
 
 * {

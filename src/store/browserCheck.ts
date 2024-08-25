@@ -6,6 +6,7 @@ export const useCheckBrowserInfo = defineStore("browser-info", {
     state() {
         const browser: Dictionary = {};
         return {
+            isInit: false,
             browser
         };
     },
@@ -15,6 +16,7 @@ export const useCheckBrowserInfo = defineStore("browser-info", {
                 Object.keys(r).forEach(k => {
                     this.browser[k] = r[k];
                 });
+                this.isInit = true;
             });
         }
     }

@@ -21,3 +21,12 @@ import { useCheckBrowserInfo } from "../../store/browserCheck";
 const cbi = useCheckBrowserInfo();
 const { browser } = storeToRefs(cbi);
 </script>
+
+<style scoped>
+tr:nth-child(odd) {
+    background-color: var(--dashboard-layout);
+}
+td:nth-child(even) {
+    max-width: 250px;
+}
+</style>
