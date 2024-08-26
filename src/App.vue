@@ -22,9 +22,12 @@ onMounted(() => {
 <style scoped>
 .app-box {
     display: block;
+    max-width: 100vw;
+    max-height: 100vh;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    overflow: auto auto;
 }
 </style>
