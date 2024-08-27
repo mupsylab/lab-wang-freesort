@@ -9,10 +9,12 @@ import { onMounted, render, h } from 'vue';
 import jsPsychHtmlKeyboardResponse from "@jspsych/plugin-html-keyboard-response";
 
 import { useCheckBrowserInfo } from "../../store/browserCheck";
+import { useLoaderAssets } from '../../store/loadAssetsToBlob';
 import Session from '../../utils/session';
 import { getUuid } from '../../utils/random';
-const session = new Session();
+const loader = useLoaderAssets();
 const cbi = useCheckBrowserInfo();
+const session = new Session();
 
 const jsPsych = initJsPsych({
     display_element: "exp"
@@ -21,15 +23,28 @@ const jsPsych = initJsPsych({
 const timeline: object[] = [{
     type: jsPsychHtmlKeyboardResponse,
     choices: ["NO_KEYS"],
-    stimulus: "<div id='box'></div>",
+    stimulus: "<span id='a1'>0</span>/<span id='a2'>1</span>",
     on_load() {
         // 初始化代码放这里
-        let i = setInterval(() => {
-            if (cbi.isInit) {
+        if(!loader.isInit) {
+            // 进行加载，同时避免vue的热更新
+            loader.addAssets("./logo.svg");
+        }
+        loader.startLoad();
+
+        const totalNumDom = document.querySelector("#a2") as HTMLDivElement;
+        const countNumDom = document.querySelector("#a1") as HTMLDivElement;
+
+        const i = setInterval(() => {
+            if (cbi.isInit && loader.isFinish) {
+                clearInterval(i);
                 jsPsych.finishTrial({
                     type: "init-function"
-                })
-                clearInterval(i);
+                });
+            } else {
+                const { len, left } = loader.progress;
+                totalNumDom.innerText = len.toString();
+                countNumDom.innerText = (len - left).toString();
             }
         }, 100);
     }
