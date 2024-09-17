@@ -6,8 +6,8 @@ let mainWindow;  // 用来保存主窗口对象的引用
 app.on('ready', () => {
   // 创建主窗口
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
     frame: true
   });
 
