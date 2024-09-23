@@ -42,9 +42,9 @@ const timeline: object[] = [{
                     type: "init-function"
                 });
             } else {
-                const { len, left } = loader.progress;
+                const { len, left, loading } = loader.progress;
                 totalNumDom.innerText = len.toString();
-                countNumDom.innerText = (len - left).toString();
+                countNumDom.innerText = (len - left + loading).toFixed(2);
             }
         }, 100);
     }

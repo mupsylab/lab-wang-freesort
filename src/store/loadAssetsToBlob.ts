@@ -6,32 +6,46 @@ export const useLoaderAssets = defineStore("loader-assets-to-blobs", {
             _running: false,
             tmpSet: new Set<string>(), // 用于存储准备加载的静态资源
             blobMap: new Map<string, string>(), // 用于存储最后的blob资源
+            loading: 0, // 处于加载中的进度条
         }
     },
     getters: {
         isInit(): boolean { return !!this.blobMap.size },
         isRunning(): boolean { return this._running },
         isFinish(): boolean { return !this.tmpSet.size },
-        progress(): {len: number, left: number} {
+        progress(): {len: number, left: number, loading: number} {
             return {
                 len: this.tmpSet.size + this.blobMap.size,
-                left: this.tmpSet.size
+                left: this.tmpSet.size,
+                loading: this.loading
             }
         }
     },
     actions: {
         _addAssetsToBlobAsync(url: string) {
             const _this = this;
-            fetch(url, {
-                keepalive: false,
-                method: "get"
-            }).then(r => r.blob())
-            .then(blob => {
-                _this._loadSuccess(url, blob);
-            })
-            .catch((e: string) => {
-                _this._loadError(url, e);
-            })
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'blob';
+            xhr.onload = function () {
+                _this.loading -= 1;
+                if (this.status == 200) {
+                    const blob = this.response;
+                    _this._loadSuccess(url, blob);
+                } else {
+                    _this._loadError(url, "Error");
+                }
+            }
+            let c = 0;
+            xhr.onprogress = (e) => {
+                this.loading += (e.loaded - c) / e.total;
+                c = e.loaded;
+            }
+            xhr.ontimeout = function() {
+                _this._loadError(url, "Timeout!");
+            }
+            xhr.send();
         },
         _loadSuccess(url: string, blob: Blob) {
             this.tmpSet.delete(url);
@@ -44,7 +58,7 @@ export const useLoaderAssets = defineStore("loader-assets-to-blobs", {
             this.tmpSet.add(str);
         },
         getAssets(str: string) {
-            this.blobMap.get(str);
+            return this.blobMap.get(str);
         },
         startLoad() {
             if(this.isRunning) {
