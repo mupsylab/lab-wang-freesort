@@ -14,7 +14,6 @@ import Session from '../../utils/session';
 import { getUuid } from '../../utils/random';
 const loader = useLoaderAssets();
 const cbi = useCheckBrowserInfo();
-const session = new Session();
 
 const jsPsych = initJsPsych({
     display_element: "exp"
@@ -28,7 +27,11 @@ const timeline: object[] = [{
         // 初始化代码放这里
         if(!loader.isInit) {
             // 进行加载，同时避免vue的热更新
-            loader.addAssets("./logo.svg");
+            loader.addAssets("./assets/cro_minion/baby.jpg");
+            loader.addAssets("./assets/cro_minion/man.jpg");
+            loader.addAssets("./assets/cro_minion/monster.jpg");
+            loader.addAssets("./assets/cro_minion/short.jpg");
+            loader.addAssets("./assets/cro_minion/tall.jpg");
         }
         loader.startLoad();
 
@@ -50,22 +53,54 @@ const timeline: object[] = [{
     }
 }];
 
-import questionnaire from '../../components/questionnaire.vue';
+import freeSort from './trial/freeSort.vue';
+import freeLine from './trial/freeLine.vue';
 timeline.push({
     type: jsPsychHtmlKeyboardResponse,
     choices: ["NO_KEYS"],
     stimulus: "<div id='box'></div>",
     on_load() {
-        render(h(questionnaire, {
-            title: "测试题",
-            desc: "这只是一个示例，展示问卷如何使用",
-            questionList: [
-                { type: "radio", name: "check", title: "检测题测试", desc: "测试单选题", choices: ["正确答案", "错误答案"] },
-                { type: "text", name: "text", title: "测试填空题", desc: "", placeholder: "输入任意内容" },
-                { type: "number", name: "num", title: "测试填数字", desc: "", placeholder: "输入任意数字" }
-            ],
-            onEndTrial(data) {
-                jsPsych.finishTrial(data);
+        let step = 0;
+        render(h(freeSort, {
+            roleName: ["baby", "man", "monster", "short", "tall"],
+            onEndTrial(data: Array<{name: string, posX: number, posY: number}>) {
+                data.forEach((item, i: number) => {
+                    jsPsych.data.write(Object.assign({}, item, {
+                        index: i,
+                        save: true,
+                        trial_name: "freeSort"
+                    }));
+                });
+                jsPsych.finishTrial({});
+            },
+            onDragEvent(data: {name: string, posX: number, posY: number}) {
+                step += 1;
+                jsPsych.data.write(Object.assign({}, data, {
+                    save: true,
+                    index: step,
+                    trial_name: "freeSort_ing"
+                }));
+                console.log(2222);
+            }
+        }), document.querySelector("#box") as Element);
+    }
+});
+timeline.push({
+    type: jsPsychHtmlKeyboardResponse,
+    choices: ["NO_KEYS"],
+    stimulus: "<div id='box'></div>",
+    on_load() {
+        const trials = jsPsych.data.get().filter({save: true}).last(5).values();
+        render(h(freeLine, {
+            trials: trials,
+            onEndTrial(keys, vals) {
+                jsPsych.data.write({
+                    keys: keys,
+                    vals: vals,
+                    save: true,
+                    trial_name: "freeLine"
+                });
+                jsPsych.finishTrial({});
             }
         }), document.querySelector("#box") as Element);
     }
@@ -78,7 +113,7 @@ timeline.push({
     stimulus: "<div id='box'></div>",
     on_load() {
         jsPsych.data.write(cbi.browser);
-        session.offlineSave(jsPsych.data.get().csv(), getUuid());
+        new Session().offlineSave(jsPsych.data.get().csv(), getUuid());
         render(h(endExp), document.querySelector("#box") as Element);
     }
 });
