@@ -41,9 +41,9 @@ class DataSave {
     }
     reset() {
         const vals: number[][] = [];
-        this.keys.forEach(item => {
+        this.keys.forEach(() => {
             const v1: number[] = [];
-            this.keys.forEach(item => {
+            this.keys.forEach(() => {
                 v1.push(0);
             });
             vals.push(v1);
